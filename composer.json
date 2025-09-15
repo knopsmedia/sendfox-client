@@ -1,0 +1,40 @@
+{
+    "name": "knops/sendfox-client",
+    "description": "A PHP library for interacting with the Sendfox API using PSR HTTP Client Interface",
+    "license": "MIT",
+    "type": "library",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Ignace Knops",
+            "email": "ignace@knops.agency"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.87",
+        "guzzlehttp/guzzle": "^7.0",
+        "phpunit/phpunit": "^9.0",
+        "symfony/http-client": "^5.0 || ^6.0 || ^7.0"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Knops\\SendfoxClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Knops\\SendfoxClient\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
