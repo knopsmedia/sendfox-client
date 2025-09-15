@@ -8,10 +8,17 @@ class ListsResource extends BaseResource
 {
     /**
      * Get all lists
+     *
+     * @param string|null $query Search query for filtering lists
      */
-    public function all(): array
+    public function all(?string $query = null): array
     {
-        return $this->client->request('GET', '/lists');
+        $endpoint = '/lists';
+        if ($query !== null) {
+            $endpoint .= '?' . http_build_query(['query' => $query]);
+        }
+
+        return $this->client->request('GET', $endpoint);
     }
 
     /**
@@ -34,10 +41,18 @@ class ListsResource extends BaseResource
 
     /**
      * Get contacts in a specific list
+     *
+     * @param int $listId The list ID
+     * @param string|null $query Search query for filtering contacts in this list
      */
-    public function contacts(int $listId): array
+    public function contacts(int $listId, ?string $query = null): array
     {
-        return $this->client->request('GET', "/lists/{$listId}/contacts");
+        $endpoint = "/lists/{$listId}/contacts";
+        if ($query !== null) {
+            $endpoint .= '?' . http_build_query(['query' => $query]);
+        }
+
+        return $this->client->request('GET', $endpoint);
     }
 
     /**

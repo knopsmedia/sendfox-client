@@ -8,10 +8,17 @@ class FormsResource extends BaseResource
 {
     /**
      * Get all forms
+     *
+     * @param string|null $query Search query for filtering forms
      */
-    public function all(): array
+    public function all(?string $query = null): array
     {
-        return $this->client->request('GET', '/forms');
+        $endpoint = '/forms';
+        if ($query !== null) {
+            $endpoint .= '?' . http_build_query(['query' => $query]);
+        }
+
+        return $this->client->request('GET', $endpoint);
     }
 
     /**

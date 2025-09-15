@@ -96,8 +96,37 @@ $campaign = $sendfox->campaigns()->get(2490607);
 // Alle contacten ophalen
 $contacts = $sendfox->contacts()->all();
 
+// Contacten filteren
+$filtered = $sendfox->contacts()->all(
+    query: 'john',              // Zoek op naam/email
+    unsubscribed: true,         // Alleen uitgeschreven contacten
+    email: 'test@example.com'   // Specifiek emailadres
+);
+
 // Specifiek contact ophalen
 $contact = $sendfox->contacts()->get(125534483);
+
+// Nieuw contact aanmaken
+$newContact = $sendfox->contacts()->create(
+    email: 'new@example.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    ipAddress: '192.168.1.1',
+    lists: [123, 456],  // Voeg toe aan lijsten
+    contactFields: [
+        ['name' => 'company', 'value' => 'Acme Corp'],
+        ['name' => 'phone', 'value' => '+31612345678']
+    ]
+);
+
+// Contact uitschrijven
+$sendfox->contacts()->unsubscribe('email@example.com');
+
+// Uitgeschreven contacten ophalen
+$unsubscribed = $sendfox->contacts()->unsubscribed();
+
+// Zoeken in uitgeschreven contacten
+$unsubscribedFiltered = $sendfox->contacts()->unsubscribed('john');
 ```
 
 ### Lists
@@ -105,6 +134,9 @@ $contact = $sendfox->contacts()->get(125534483);
 ```php
 // Alle lijsten ophalen
 $lists = $sendfox->lists()->all();
+
+// Lijsten filteren
+$filteredLists = $sendfox->lists()->all('newsletter');
 
 // Specifieke lijst ophalen
 $list = $sendfox->lists()->get(584322);
@@ -115,6 +147,9 @@ $newList = $sendfox->lists()->create('Nieuwe lijst naam');
 // Contacten in lijst ophalen
 $listContacts = $sendfox->lists()->contacts(584322);
 
+// Contacten in lijst zoeken
+$searchResults = $sendfox->lists()->contacts(584322, 'john');
+
 // Contact uit lijst verwijderen
 $sendfox->lists()->removeContact(584322, 125534483);
 ```
@@ -124,6 +159,9 @@ $sendfox->lists()->removeContact(584322, 125534483);
 ```php
 // Alle formulieren ophalen
 $forms = $sendfox->forms()->all();
+
+// Formulieren filteren
+$filteredForms = $sendfox->forms()->all('signup');
 
 // Specifiek formulier ophalen
 $form = $sendfox->forms()->get(123);
@@ -154,15 +192,83 @@ $contactFields = $sendfox->user()->contactFields();
 De library bevat enkele data models voor veelgebruikte responses:
 
 ```php
-use Knops\SendfoxClient\Models\Campaign;use Knops\SendfoxClient\Models\Contact;use Knops\SendfoxClient\Models\ContactList;
+use Knops\SendfoxClient\Models\Campaign;
+use Knops\SendfoxClient\Models\Contact;
+use Knops\SendfoxClient\Models\ContactList;
+use Knops\SendfoxClient\Models\Form;
+use Knops\SendfoxClient\Models\Automation;
+use Knops\SendfoxClient\Models\User;
 
 // Creëer model van array data
 $campaign = Campaign::fromArray($campaignData);
 $contact = Contact::fromArray($contactData);
 $list = ContactList::fromArray($listData);
+$form = Form::fromArray($formData);
+$automation = Automation::fromArray($automationData);
+$user = User::fromArray($userData);
 
 // Converteer model terug naar array
 $array = $campaign->toArray();
+```
+
+### Contact Model Features
+
+Het `Contact` model heeft extra functionaliteit:
+
+```php
+$contact = Contact::fromArray($contactData);
+
+// Toegang tot alle contact eigenschappen
+echo $contact->id;              // Contact ID
+echo $contact->email;           // Email address
+echo $contact->first_name;      // Voornaam
+echo $contact->last_name;       // Achternaam
+echo $contact->ip_address;      // IP adres
+echo $contact->unsubscribed_at; // Uitschrijf datum (null als niet uitgeschreven)
+echo $contact->created_at;      // Aanmaak datum
+echo $contact->updated_at;      // Update datum
+
+// Controleer uitschrijf status
+if ($contact->isUnsubscribed()) {
+    echo "Contact is uitgeschreven op: " . $contact->unsubscribed_at;
+} else {
+    echo "Contact is actief";
+}
+```
+
+### User Model Features
+
+Het `User` model heeft extra functionaliteit voor account monitoring:
+
+```php
+$user = User::fromArray($userData);
+
+// Toegang tot gebruiker eigenschappen
+echo $user->name;            // Gebruikersnaam
+echo $user->email;           // Email adres
+echo $user->contacts_count;  // Aantal contacten
+echo $user->contact_limit;   // Contact limiet
+
+// Contact limiet monitoring
+if ($user->isAtContactLimit()) {
+    echo "Je hebt je contact limiet bereikt!";
+}
+
+// Contact gebruik percentage
+$usage = $user->getContactUsagePercentage();
+echo "Contact gebruik: {$usage}%";
+```
+
+### ContactList Model Features
+
+Het `ContactList` model bevat performance statistieken:
+
+```php
+$list = ContactList::fromArray($listData);
+
+echo $list->name;                          // Lijst naam
+echo $list->average_email_open_percent;    // Gemiddeld open percentage
+echo $list->average_email_click_percent;   // Gemiddeld klik percentage
 ```
 
 ## Exception Handling

@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Knops\SendfoxClient\Models;
 
-class ContactList
+class Automation
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $name,
-        public readonly ?int $user_id = null,
-        public readonly ?float $average_email_open_percent = null,
-        public readonly ?float $average_email_click_percent = null,
+        public readonly int $user_id,
+        public readonly string $title,
         public readonly ?string $created_at = null,
         public readonly ?string $updated_at = null,
         public readonly ?array $data = null
@@ -22,10 +20,8 @@ class ContactList
     {
         return new self(
             id: $data['id'],
-            name: $data['name'],
-            user_id: $data['user_id'] ?? null,
-            average_email_open_percent: $data['average_email_open_percent'] ?? null,
-            average_email_click_percent: $data['average_email_click_percent'] ?? null,
+            user_id: $data['user_id'],
+            title: $data['title'],
             created_at: $data['created_at'] ?? null,
             updated_at: $data['updated_at'] ?? null,
             data: $data
@@ -36,10 +32,8 @@ class ContactList
     {
         return $this->data ?? [
             'id' => $this->id,
-            'name' => $this->name,
             'user_id' => $this->user_id,
-            'average_email_open_percent' => $this->average_email_open_percent,
-            'average_email_click_percent' => $this->average_email_click_percent,
+            'title' => $this->title,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
