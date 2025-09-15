@@ -3,7 +3,6 @@
     "description": "A PHP library for interacting with the Sendfox API using PSR HTTP Client Interface",
     "license": "MIT",
     "type": "library",
-    "version": "1.0.0",
     "authors": [
         {
             "name": "Ignace Knops",
