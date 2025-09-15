@@ -14,7 +14,7 @@ Een PHP library voor communicatie met de Sendfox API, gebouwd met PSR HTTP Clien
 ## Installatie
 
 ```bash
-composer require ignace/sendfox-client
+composer require knops/sendfox-client
 ```
 
 ## Vereisten
